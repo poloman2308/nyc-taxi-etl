@@ -6,8 +6,6 @@ This project builds an end-to-end **ETL pipeline** for processing New York City 
 
 ## 📁 Project Structure
 
----
-
 nyc-taxi-etl/
 ├── dags/ # Airflow DAGs
 │ └── nyc_taxi_etl.py # Main DAG file
