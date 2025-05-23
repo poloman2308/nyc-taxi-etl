@@ -1,6 +1,12 @@
-# NYC Yellow Taxi ETL Pipeline 🚖
+# NYC Taxi ETL Pipeline 🚖
 
-This project builds an end-to-end **ETL pipeline** for processing New York City Yellow Taxi trip data using **Apache Airflow**, **PostgreSQL**, and **Amazon S3**. It automates data ingestion, transformation, and cloud storage, making it a scalable and production-ready workflow.
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
+[![Airflow](https://img.shields.io/badge/Airflow-2.8.1-blue)](https://airflow.apache.org/)
+[![AWS S3](https://img.shields.io/badge/AWS-S3-orange)](https://aws.amazon.com/s3/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)](https://www.postgresql.org/)
+
+An end-to-end ETL pipeline using Apache Airflow to process and analyze NYC Yellow Taxi trip data. This project includes automated data ingestion, validation, PostgreSQL loading, and S3 archival.
 
 ---
 
