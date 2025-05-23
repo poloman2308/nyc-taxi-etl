@@ -8,17 +8,18 @@ This project builds an end-to-end **ETL pipeline** for processing New York City 
 
 ```
 nyc-taxi-etl/
-├── dags/ # Airflow DAGs
-│ └── nyc_taxi_etl.py # Main DAG file
-├── data/ # (Ignored) Local raw data folder
-│ └── yellow_taxi_data.csv # Raw dataset (excluded from GitHub)
-├── scripts/ # Custom Python scripts (if any)
-├── config.py # Environment config loader
-├── .env # Environment variables (ignored)
-├── .gitignore # Git ignore rules
-├── requirements.txt # Python dependencies
-├── SETUP.md # Developer setup instructions
-└── README.md # Project overview (this file)
+├── dags/                  
+│   └── nyc_taxi_etl.py    
+├── data/                  
+│   └── yellow_taxi_data.csv  
+├── scripts/               
+│   ├── config.py
+│   └── webserver_config.py
+├── .env                   
+├── .gitignore             
+├── requirements.txt       
+├── SETUP.md               
+└── README.md           
 ```
 
 ---
