@@ -1,0 +1,33 @@
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Logs and local data
+logs/
+*.log
+
+# Airflow
+airflow.db
+airflow.cfg
+*.pid
+dags/__pycache__/
+dags/*.pyc
+
+# Environment
+.env
+.venv/
+env/
+venv/
+
+# macOS
+.DS_Store
+
+# Python egg info
+*.egg-info/
+dist/
+build/
