@@ -54,6 +54,34 @@ Uploads the CSV file to an Amazon S3 bucket for archival.
 
 ---
 
+## 🔄 ETL Flow Diagram
+
+```mermaid
+flowchart TD
+  subgraph Source
+    A[NYC Taxi Parquet File<br>📂 Remote URL]
+  end
+
+  subgraph Ingest
+    B[Airflow DAG Task<br>download_data()]
+    A --> B
+    B --> C[Local CSV<br>📁 /tmp/yellow_taxi_data.csv]
+  end
+
+  subgraph Transform & Load
+    D[load_to_postgres()<br>Validate + Insert]
+    C --> D
+    D --> E[(PostgreSQL<br>🛢️ nyc_taxi)]
+  end
+
+  subgraph Archive
+    F[upload_to_s3()<br>Backup to S3]
+    C --> F
+    F --> G[S3 Bucket<br>📦 dataeng-landing-zone]
+  end
+```
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -117,21 +145,14 @@ Access the UI at: http://localhost:8080
 ## 📊 Dataset
 
 Source: [NYC TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
-Due to GitHub file size limits, the CSV is not included in the repo.
-Download it manually or let the DAG download it for you.
+> Due to GitHub file size limits, the CSV is not included in the repo.
+> Download it manually or let the DAG download it for you.
 
 ---
 
 ## 📤 S3 Configuration
 
 Make sure your AWS credentials are stored securely in .env. The DAG automatically uploads processed CSVs to the configured S3 bucket.
-
----
-
-## 🤝 Contributing
-
-Contributions, issues and feature requests are welcome.
-Feel free to fork this repository and submit a pull request.
 
 ---
 
