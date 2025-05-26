@@ -57,33 +57,32 @@ Uploads the CSV file to an Amazon S3 bucket for archival.
 ## 🔄 ETL Flow Diagram
 
 ```mermaid
-```mermaid
 flowchart LR
 
-  %% ---------- INGESTION ----------
+  %% ---------- INGEST ----------
   subgraph Ingest
     A1[📄 Download:<br/>NYC Taxi Parquet] --> B1(download_data)
   end
 
-  %% ---------- STAGING / CLEANING ----------
+  %% ---------- TRANSFORM ----------
   subgraph Transform
-    B1 --> C1[load_to_postgres]
+    B1 --> C1(load_to_postgres)
     C1 --> PG[(PostgreSQL:<br/><b>nyc_taxi.yellow_taxi_data</b>)]
   end
 
-  %% ---------- STORAGE / EXPORT ----------
+  %% ---------- EXPORT ----------
   subgraph Export
-    PG --> D1[upload_to_s3]
+    PG --> D1(upload_to_s3)
     D1 --> S3[(S3 Bucket:<br/><b>dataeng-clean-zone-dfa23</b>)]
   end
 
   %% ---------- STYLES ----------
-  style A1 fill:#fffbe7,stroke:#444
-  style B1 fill:#dde1ff,stroke:#444
-  style C1 fill:#d9ead3,stroke:#444
-  style PG fill:#cfe2f3,stroke:#444
-  style D1 fill:#fce5cd,stroke:#444
-  style S3 fill:#f9cb9c,stroke:#444
+  style A1  fill:#fffbe7,stroke:#444
+  style B1  fill:#dde1ff,stroke:#444
+  style C1  fill:#d9ead3,stroke:#444
+  style PG  fill:#cfe2f3,stroke:#444
+  style D1  fill:#fce5cd,stroke:#444
+  style S3  fill:#f9cb9c,stroke:#444
 ```
 
 ---
