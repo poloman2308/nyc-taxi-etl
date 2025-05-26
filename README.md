@@ -57,29 +57,52 @@ Uploads the CSV file to an Amazon S3 bucket for archival.
 ## 🔄 ETL Flow Diagram
 
 ```mermaid
-flowchart TD
-  subgraph Source
-    A[NYC Taxi Parquet File<br>📂 Remote URL]
-  end
+```mermaid
+flowchart LR
 
+  %% ---------- INGESTION ----------
   subgraph Ingest
-    B[Airflow DAG Task<br>download_data()]
-    A --> B
-    B --> C[Local CSV<br>📁 /tmp/yellow_taxi_data.csv]
+    A1[📄 Download:<br/>NYC Taxi Parquet] --> B1(download_data)
   end
 
-  subgraph Transform & Load
-    D[load_to_postgres()<br>Validate + Insert]
-    C --> D
-    D --> E[(PostgreSQL<br>🛢️ nyc_taxi)]
+  %% ---------- STAGING / CLEANING ----------
+  subgraph Transform
+    B1 --> C1[load_to_postgres]
+    C1 --> PG[(PostgreSQL:<br/><b>nyc_taxi.yellow_taxi_data</b>)]
   end
 
-  subgraph Archive
-    F[upload_to_s3()<br>Backup to S3]
-    C --> F
-    F --> G[S3 Bucket<br>📦 dataeng-landing-zone]
+  %% ---------- STORAGE / EXPORT ----------
+  subgraph Export
+    PG --> D1[upload_to_s3]
+    D1 --> S3[(S3 Bucket:<br/><b>dataeng-clean-zone-dfa23</b>)]
   end
+
+  %% ---------- STYLES ----------
+  style A1 fill:#fffbe7,stroke:#444
+  style B1 fill:#dde1ff,stroke:#444
+  style C1 fill:#d9ead3,stroke:#444
+  style PG fill:#cfe2f3,stroke:#444
+  style D1 fill:#fce5cd,stroke:#444
+  style S3 fill:#f9cb9c,stroke:#444
 ```
+
+---
+
+## 🧩 Components Glossary
+
+| Component              | Type              | Description                                                                 |
+| ---------------------- | ----------------- | --------------------------------------------------------------------------- |
+| `download_data`        | Airflow Task      | Downloads NYC Taxi trip data in Parquet format and converts it to CSV.      |
+| `load_to_postgres`     | Airflow Task      | Loads cleaned CSV data into a local PostgreSQL table.                       |
+| `upload_to_s3`         | Airflow Task      | Uploads the CSV to AWS S3 for durable storage.                              |
+| `nyc_taxi_etl.py`      | DAG Script        | The main DAG file orchestrating the ETL pipeline in Airflow.                |
+| `yellow_taxi_data.csv` | Data File         | Raw trip record data from the NYC Taxi & Limousine Commission.              |
+| `.env`                 | Environment File  | Stores sensitive configuration like AWS credentials (excluded from GitHub). |
+| `config.py`            | Config Script     | Loads environment variables into the DAG using `dotenv`.                    |
+| `requirements.txt`     | Dependency List   | Lists Python packages needed for the project.                               |
+| `scripts/`             | Utility Directory | Custom helper scripts for loading config or uploading files.                |
+| `data/`                | Data Directory    | Contains raw CSV files (not tracked in GitHub via `.gitignore`).            |
+
 ---
 
 ## 🚀 Getting Started
@@ -153,6 +176,23 @@ Source: [NYC TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-r
 ## 📤 S3 Configuration
 
 Make sure your AWS credentials are stored securely in .env. The DAG automatically uploads processed CSVs to the configured S3 bucket.
+
+---
+
+## 🔮 Future Pipeline Ideas
+
+| Idea                        | Description                                                                                                           |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Data Quality Checks**     | Add automatic validation rules using [Great Expectations](https://greatexpectations.io/) or built-in Airflow sensors. |
+| **Partitioning in S3**      | Write partitioned CSV/Parquet files to S3 (e.g., by month or vendor) to improve scalability.                          |
+| **Transform with dbt**      | Use [dbt](https://www.getdbt.com/) to model and document transformations inside PostgreSQL.                           |
+| **Visualization Layer**     | Integrate with Power BI or Tableau to visualize trip patterns and performance KPIs.                                   |
+| **Athena + Glue Catalog**   | Register S3 files with AWS Glue and query using Amazon Athena instead of PostgreSQL.                                  |
+| **Stream Real-Time Data**   | Replace batch ingestion with real-time processing using Apache Kafka or AWS Kinesis.                                  |
+| **Advanced Scheduling**     | Trigger DAGs based on file arrival events in S3 using Airflow sensors or AWS Lambda.                                  |
+| **Machine Learning Models** | Add a model to forecast trip demand or flag suspicious rides based on fare metrics.                                   |
+| **Delta Lake Integration**  | Convert pipeline storage format to Delta Lake to enable versioning and time travel.                                   |
+| **CI/CD for DAGs**          | Use GitHub Actions or GitLab CI to deploy and test DAGs before production updates.                                    |
 
 ---
 
